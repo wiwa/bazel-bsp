@@ -82,7 +82,7 @@ def java_junit5_test(name, srcs, test_package, deps = [], runtime_deps = [], **k
     java_test(
         name = name,
         srcs = srcs,
-        use_testrunner = False,
+        use_testrunner = True,
         main_class = "org.junit.platform.console.ConsoleLauncher",
         args = junit_console_args,
         deps = deps + [

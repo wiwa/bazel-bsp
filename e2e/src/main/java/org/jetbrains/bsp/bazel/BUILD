@@ -1,15 +1,49 @@
 load("@rules_java//java:defs.bzl", "java_binary")
+load("//:junit5.bzl", "java_junit5_test")
 
-java_binary(
+exports_files(["TestableTest.java"])
+
+# TODO: if intellij thinks it's a binary the colors are fine, but if it thinks it's a test they're not
+# this is a bug in intellij probably, you can fool it by using bazel run instead of bazel test
+java_junit5_test(
+    name = "Test",
+    srcs = ["TestableTest.java"],
+    data = [
+        "//e2e:installer",
+        "//e2e:resources",
+    ],
+    resources = [
+        "//e2e/src/main/resources:bsp-e2e-resources",
+    ],
+    test_package = "org.jetbrains.bsp.bazel",
+    visibility = ["//e2e:__subpackages__"],
+    deps = [
+        "//commons",
+        "//e2e/src/main/java/org/jetbrains/bsp/bazel/base",
+        "@bazel_tools//tools/runfiles:java-runfiles",
+        "@maven//:ch_epfl_scala_bsp4j",
+        "@maven//:com_google_guava_guava",
+        "@maven//:org_apache_logging_log4j_log4j_api",
+        "@maven//:org_apache_logging_log4j_log4j_core",
+        "@testkit//:testkit-client",
+    ],
+)
+
+java_junit5_test(
     name = "BazelBspSampleRepoTest",
     srcs = ["BazelBspSampleRepoTest.java"],
+    data = [
+        "//e2e:install_server",
+    ],
     resources = ["//e2e/src/main/resources:bsp-e2e-resources"],
+    test_package = "org.jetbrains.bsp.bazel",
     visibility = ["//e2e:__subpackages__"],
     deps = [
         "//commons",
         "//e2e/src/main/java/org/jetbrains/bsp/bazel/base",
         "@maven//:ch_epfl_scala_bsp4j",
         "@maven//:com_google_guava_guava",
+        "@testkit//:testkit-client",
     ],
 )
 

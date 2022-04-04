@@ -1,5 +1,6 @@
 package org.jetbrains.bsp.bazel;
 
+import ch.epfl.scala.bsp4j.BuildClientCapabilities;
 import ch.epfl.scala.bsp4j.BuildTarget;
 import ch.epfl.scala.bsp4j.BuildTargetCapabilities;
 import ch.epfl.scala.bsp4j.BuildTargetDataKind;
@@ -7,6 +8,7 @@ import ch.epfl.scala.bsp4j.BuildTargetIdentifier;
 import ch.epfl.scala.bsp4j.DependencySourcesItem;
 import ch.epfl.scala.bsp4j.DependencySourcesParams;
 import ch.epfl.scala.bsp4j.DependencySourcesResult;
+import ch.epfl.scala.bsp4j.InitializeBuildParams;
 import ch.epfl.scala.bsp4j.InverseSourcesParams;
 import ch.epfl.scala.bsp4j.InverseSourcesResult;
 import ch.epfl.scala.bsp4j.JvmBuildTarget;
@@ -34,12 +36,20 @@ import ch.epfl.scala.bsp4j.SourcesParams;
 import ch.epfl.scala.bsp4j.SourcesResult;
 import ch.epfl.scala.bsp4j.TextDocumentIdentifier;
 import ch.epfl.scala.bsp4j.WorkspaceBuildTargetsResult;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.jetbrains.bsp.bazel.base.BazelBspTestBaseScenario;
 import org.jetbrains.bsp.bazel.base.BazelBspTestScenarioStep;
 import org.jetbrains.bsp.bazel.commons.Constants;
+import org.jetbrains.bsp.testkit.client.TestClient;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BazelBspSampleRepoTest extends BazelBspTestBaseScenario {
 
@@ -80,6 +90,16 @@ public class BazelBspSampleRepoTest extends BazelBspTestBaseScenario {
         //          "target capabilities",
         //          client::testTargetCapabilities)
         );
+  }
+
+
+  @Test
+  public void testWorkspaceTargets() {
+    WorkspaceBuildTargetsResult expectedWorkspaceBuildTargetsResult =
+            getExpectedWorkspaceBuildTargetsResult();
+
+    testClient.testWorkspaceTargets(
+            Duration.ofSeconds(30), expectedWorkspaceBuildTargetsResult);
   }
 
   private BazelBspTestScenarioStep resolveProject() {
