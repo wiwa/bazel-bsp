@@ -63,7 +63,7 @@ public class InstallationContextJavaPathEntityMapperTest {
 
   @Test
   public void
-      shouldReturnFailureIfJavaPathIsNotSpecifiedInProjectViewAndItIsImpossibleToObtainItFromSystemPropererties() {
+  shouldReturnFailureIfJavaPathIsNotSpecifiedInProjectViewAndItIsImpossibleToObtainItFromSystemProperties() {
     // given
     var projectView = ProjectView.builder().javaPath(Option.none()).build().get();
 
